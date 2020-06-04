@@ -1,6 +1,7 @@
 <h1>Music Player for Lessons</h1>
 <hr />
 Based on python 3.7 tkinter 8.5
+<br />
 This Music player make it easier if you want to listen to music in class and hide it from your grumpy teacher.  
 <br /><br />
 <h1>Requirements</h1>
