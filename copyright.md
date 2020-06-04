@@ -1,5 +1,4 @@
-# Copyright 2020, Messiz Qin
-# All Rights Reserved
+# Copyright 2020, Messiz Qin  All Rights Reserved
 <br /><br />
 <hr />
 <h2>CITATION</h2>
