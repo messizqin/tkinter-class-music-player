@@ -23,11 +23,11 @@ http://www.smustard.com/eula
 <br /><br />
 <hr />
 <h2>INFORMATION</h2>
-Author - Messiz Qin
-Contact - messizqin@gmail.com
-Name - Music Player for Lessons
-Python Version - 3.8
-Tkinter Version - 8.6
+Author - Messiz Qin<br />
+Contact - messizqin@gmail.com<br />
+Name - Music Player for Lessons<br />
+Python Version - 3.8<br />
+Tkinter Version - 8.6<br />
 This Music player make it easier if you want to listen to music in class and hide it from your grumpy teacher.
 <br /><br />
 <hr />
