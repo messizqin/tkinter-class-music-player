@@ -49,8 +49,6 @@ This Music player make it easier if you want to listen to music in class and hid
 <br /><br />
 <hr />
 <h2>FEATURE</h2>
-<ol>
-<li>
 <ul>
 Many shortcuts allow user to:
 <li>Switch to another pannel that looks like studying</li>
@@ -58,8 +56,6 @@ Many shortcuts allow user to:
 <li>Control volume</li>
 <li>Previous/Next songs</li>
 </ul>
-</li>
-</ol>
 <h2>HISTORY</h2>
 1.0 - 04/06/2020
-main functions: save playing sequence, shortcuts (start/pause/previous/next/set_volume/save_files)
+main functions: save playing sequence, shortcuts (start/pause/previous/next/set_volume/save_files)<br /><br />
