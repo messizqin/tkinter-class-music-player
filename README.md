@@ -10,7 +10,7 @@ This Music player make it easier if you want to listen to music in class and hid
   <li>Python 3 installed</li>
   <li><b>tkinter</b> installed</li>
   <li><b>pygame</b> installed</li>
-  <li>Note that the music player doesn't provide any online downloading, since the user must have downloaded some music files</li>
+  <li>Note that the music player doesn't provide any online downloading, since the music have to be downloaded in another channel</li>
 </ol>
 <br /><br />
 <h1>Usage</h1>
