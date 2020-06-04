@@ -42,7 +42,7 @@ This Music player make it easier if you want to listen to music in class and hid
 <hr />
 <h2>USAGE</h2>
 <ol>
-  <li>Place `main.pyw` and `img folder` into your music folder (make sure there are some music files in your music folder)</li>
+  <li>Place `main.pyw` and `img folder` into your music folder (make sure some music files already exist</li>
   <li>Double click on `main.pyw`</li>
   <li>Press on keyboard 'i' for more instruction</li>
 </ol>
