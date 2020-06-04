@@ -1,5 +1,5 @@
 # Copyright 2020, Messiz Qin  All Rights Reserved
-<br /><br />
+<br />
 <h2>CITATION</h2>
 Tkinter ToolTip<br />
 @squareRoot17, stackoverflow<br />
