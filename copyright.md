@@ -1,4 +1,4 @@
-# Copyright 2020, Messiz Qin  All Rights Reserved
+# Copyright 2020, Messiz Qin, All Rights Reserved
 <br />
 <h2>CITATION</h2>
 <b>Tkinter ToolTip</b><br />
