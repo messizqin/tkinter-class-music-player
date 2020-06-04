@@ -1,4 +1,4 @@
-<h1>Music Player for Lessons</h1>
+<h1>Tkinter class music player</h1>
 <hr />
 Based on python 3.7 tkinter 8.5
 <br />
