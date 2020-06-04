@@ -1,13 +1,13 @@
 # Copyright 2020, Messiz Qin  All Rights Reserved
 <br />
 <h2>CITATION</h2>
-Tkinter ToolTip<br />
+<b>Tkinter ToolTip</b><br />
 @squareRoot17, stackoverflow<br />
 https://stackoverflow.com/questions/20399243/display-message-when-hovering-over-something-with-mouse-cursor-in-python/56749167#comment109884441_56749167<br />
 @voidspace<br />
 http://www.voidspace.org.uk/python/weblog/arch_d7_2006_07_01.shtml#e387<br />
 <br />
-Tkinter Draggable List<br />
+<b>Tkinter Draggable List</b><br />
 version: 0.3<br />
 Author: Miguel Martinez Lopez<br />
 http://code.activestate.com/recipes/580748-tkinter-draggable-list-v2/
