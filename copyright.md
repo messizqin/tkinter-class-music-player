@@ -26,8 +26,8 @@ http://www.smustard.com/eula
 Author - Messiz Qin<br />
 Contact - messizqin@gmail.com<br />
 Name - Music Player for Lessons<br />
-Python Version - 3.8<br />
-Tkinter Version - 8.6<br />
+<u>Python Version - 3.8</u><br />
+<u>Tkinter Version - 8.6</u><br />
 This Music player make it easier if you want to listen to music in class and hide it from your grumpy teacher.
 <br /><br />
 <hr />
