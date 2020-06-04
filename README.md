@@ -26,8 +26,8 @@ This Music player make it easier if you want to listen to music in class and hid
 <u>Many shortcuts allow user to: </u>
 <ol>
   <li>Switch to another pannel that looks like studying</li>
-  <li>Pauss/start songs</li>
+  <li>Start/Pause songs</li>
   <li>Control volume</li>
-  <li>Previous/next songs</li>
+  <li>Previous/Next songs</li>
 </ol>
 <br /><br />
