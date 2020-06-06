@@ -1,6 +1,7 @@
 import os
 import json
-import random
+
+# python 3 support
 try:
     from tkinter.constants import *
     from tkinter import *
@@ -16,29 +17,45 @@ try:
 except NameError:
     basestring = str
 
+# pass in two array of same elements in different order, return how second one can be gained from first
 def change(initial, after):
     pc = []
     for i in after:
         pc.append(initial.index(i))
     return pc
 
+# global constant 
 class Module:
     def __init__(self):
+        # switch between music tags and dummy tags
         self.switched = False
+        # whether restart from beginning or not
         self.resorted = False
+        # Labels and music file names
         self.label_tags = []
         self.label_nams = []
+        # stop music and start music
         self.paused = False
         self.started = False
+        # files never change, it is the file collected at once from directory as the player start
         self.files = []
+        # finds never change, it is a list of index of from 0 to the length of files minus 1
         self.finds = []
+        # current playing file name
         self.current = None
+        # previous playing file name
         self.previous = None
+        # inds is a list of number that have same element as finds, but it have different order
         self.inds = None
+        # indicator is only true when json exist and the player is started
         self.indicator = True
+        # confessor is only true when json exist, and it's the first time that user drag and drop
         self.confessor = True
+        # temp is the last assigned index
         self.temp = []
+        # this is assigned when user first switch to dummy mode, used later to work out change in dummy mode
         self.dummy = []
+        # volume
         self.val = 70
 
     def switch_false(self):
@@ -170,6 +187,7 @@ class Module:
     def confessor_false(self):
         self.confessor = False
 
+    # label position from left top conner can be gained from winfo.rootx() and winfo.rooty()
     @property
     def sorted_label(self):
         arr = [x for x in self.label_tags]
@@ -184,6 +202,7 @@ class Module:
             miarr.append(mi)
         return miarr
 
+    # tkinter.cget fetches the property of widget
     @property
     def label_text(self):
         txt = []
@@ -191,6 +210,7 @@ class Module:
             txt.append(i.cget('text'))
         return txt
 
+    # return change of initial to current after drag and drop
     @property
     def advanced_inds(self):
         arr = []
@@ -232,6 +252,7 @@ class Module:
     def get_val(self):
         return self.val
 
+# generate a cache.json in hide mode to record playing sequence
 class Cache:
     def __init__(self):
         self.cache = 'cache.json'
@@ -254,6 +275,7 @@ class Cache:
             os.system(f"attrib +h {self.cache}")
             file.close()
 
+    # return data loaded from json file. if json is empty, excepted from if len(c.data) == 0
     @property
     def data(self):
         try:
@@ -264,6 +286,7 @@ class Cache:
         except json.decoder.JSONDecodeError:
             return {}
 
+    # return label text before drag and drop
     @property
     def past(self):
         a = self.data
@@ -272,6 +295,7 @@ class Cache:
         else:
             return [x for x in c.data['seq']]
 
+    # write json by pass in seq=[1, 3...]
     def assign(self, **kwargs):
         dt = self.data
         for key, value in kwargs.items():
@@ -284,19 +308,7 @@ class Cache:
             json.dump(data, file)
         os.system(f"attrib +h {self.cache}")
 
-    @property
-    def sorted_label(self):
-        arr = [x for x in self.label_tags]
-        wanted = []
-        while len(wanted) != len(self.label_tags):
-            mi = arr[0]
-            for i in arr[1:]:
-                if i.winfo_rooty() < mi.winfo_rooty():
-                    mi = i
-            wanted.append(mi)
-            arr.remove(mi)
-        return wanted
-
+# hover effect to show text 
 class ToolTip(object):
 
     def __init__(self, widget):
@@ -336,7 +348,7 @@ def CreateToolTip(widget, text):
     widget.bind('<Enter>', enter)
     widget.bind('<Leave>', leave)
 
-
+# Route class manage playing sequence of indices
 class Route:
     def __init__(self, array):
         self.length = len(array)
@@ -361,6 +373,7 @@ class Route:
     def index(self):
         return self.ind
 
+# Music class manage playing sequence of filenames
 class Music:
     def __init__(self, total):
         self.total = total
@@ -374,8 +387,10 @@ class Music:
             brr.append(self.sample.index(i))
         return brr
 
+    # four circumstance to call assi()   
     def assi(self, inds):
         if c.exist:
+            # 1. json exist and the music player is first loaded
             if m.get_indicator:
                 m.indicator_false()
                 m.assign_inds(self.reverse)
@@ -384,6 +399,7 @@ class Music:
                 for i in inds:
                     self.sample.append(self.total[i])
             else:
+                # 2. json exist and it's the first time the user drag and drop
                 if m.get_confessor:
                     m.confessor_false()
                     arr = []
@@ -393,6 +409,7 @@ class Music:
                     m.assign_inds(self.reverse)
                     m.assign_temp(inds)
                 else:
+                    # 3. json exist and it's the second or more time the user drag and drop
                     arr = []
                     for i in change(m.get_temp, inds):
                         arr.append(self.sample[i])
@@ -400,12 +417,13 @@ class Music:
                     m.assign_inds(self.reverse)
                     m.assign_temp(inds)
         else:
+            # json doesn't exist
             self.sample = []
             m.assign_inds(inds)
             for i in inds:
                 self.sample.append(self.total[i])
-
-
+                
+    # return filename
     def _prev(self):
         self.route -= 1
         f = self.sample[self.route.index]
@@ -427,6 +445,7 @@ class Music:
     def get_sample(self):
         return self.sample
 
+# return a list of dummy text, only call once each time loading
 def study_tools(num):
     array = [
     'Khan Academy', 'Wikipedia', 'Oxford Dictionary', 'Merriam-Webster Dictionary',
@@ -466,6 +485,7 @@ def label_to_dummy():
         lb.config(text=dummy[i])
         lb.text = dummy[i]
 
+# switch imgs
 def switch():
     if m.is_switched:
         label_to_origin()
@@ -490,6 +510,7 @@ def switch():
         nextBTN.config(image=img_next_fkr)
         nextBTN.image = img_next_fkr
 
+# support auto-play 
 def check_event():
     for event in pygame.event.get():
         if event.type == MUSIC_END:
@@ -497,6 +518,7 @@ def check_event():
 
     root.after(100, check_event)
 
+# trigger by whitespace press and playBTN
 def play_music():
     m.start_true()
     if m.is_resorted:
@@ -509,9 +531,11 @@ def play_music():
         pygame.mixer.music.load(r._next(init=True))
         pygame.mixer.music.play()
 
+# trigger by whitespace press and stopBTN
 def stop_music():
     pygame.mixer.music.pause()
 
+# trigger by right-arrow press or nextBTN
 def next_music():
     if m.is_resorted:
         m.resort_false()
@@ -523,6 +547,7 @@ def next_music():
     if m.is_paused:
         stop_music()
 
+# trigger by left-arrow press or prevBTN
 def prev_music():
     if m.is_resorted:
         m.resort_false()
@@ -534,14 +559,17 @@ def prev_music():
     if m.is_paused:
         stop_music()
 
+# trigger by i press or help->info
 def user_guide():
     messagebox.showinfo('Shortcuts', "`whitespace`: play\\pause\n`left-arrow`: play previous song\n`right-arrow`: play next song\n`up-arrow`: increase volumne\n`down-arrow`: decrease volume\n`m`: switch to dummy study tool tags\n`ctrl+s`: save current playing sequence\n`i`: shortcuts")
 
+# trigger by ctrl+s or file->save
 def save_files(e):
     if m.get_inds is None or len(m.get_inds) == 0:
         return
     c.assign(seq=m.advanced_inds)
 
+# draggabel list Item
 class Item(Frame):
     def __init__(self, master, value, width, height, selection_handler=None, drag_handler = None, drop_handler=None, **kwargs):
 
@@ -646,6 +674,7 @@ class Item(Frame):
 
         self.place_configure(x =self._x, y =self._y)
 
+# Draggable list frame
 class DDList(Frame):
     def __init__(self, master, item_width, item_height, item_relief=None, item_background=None, item_borderwidth=None, offset_x=0, offset_y=0, gap=0, **kwargs):
         kwargs["width"] = item_width+offset_x*2
@@ -677,6 +706,7 @@ class DDList(Frame):
 
         self._new_y_coord_of_selected_item = None
 
+    # trigger Music.assi(), which change playing sequence by changing inds (indices) then changing sample (filenames)
     def puts(self, _r):
         arr = []
         for i in self._list_of_items:
@@ -789,13 +819,15 @@ class DDList(Frame):
 
         self._index_of_empty_container = None
         self._index_of_selected_item = None
+        # each time drop an item, restart playing sequence from top
+        # change inds (indices) hence sample (filename) by puts => Music.assi()
         self.puts(r)
         m.resort_true()
 
 def set_volume(val):
     pygame.mixer.music.set_volume(int(val)/100.0)
 
-
+# keypress handle
 def handle(event):
     if event.keysym == "space":
         if m.is_started:
@@ -820,10 +852,12 @@ def handle(event):
     elif event.keysym == 'i':
         user_guide()
 
+# ----- main -----
 root = Tk()
 root.title('Study Tools')
 root.geometry("%dx%d%+d%+d"%(220, 1000, 0, 0))
 root.iconbitmap('img\\icon.ico')
+# init class
 m = Module()
 c = Cache()
 
@@ -839,21 +873,29 @@ img_next_fkr = PhotoImage(file='img\\pen.png').subsample(14)
 
 img_switch = PhotoImage(file='img\\arrow.png').subsample(14)
 
+# init Module by directory default files
 m.init_files()
 
 if len(m.filing) > 18:
     messagebox.showerror('Too much music', f'Maximum number of music: 18\ncurrent files: {len(m.filing)}')
     exit()
 
+# init Music module by Module recorded directory default files 
 r = Music(m.filing)
 
+# attempt to get data from json file
 if len(c.data) != 0:
     r.assi([int(i) for i in c.data['seq']])
 
+# init pygame (or mixer)
 pygame.init()
+# auto-play event
 MUSIC_END = pygame.USEREVENT + 1
 pygame.mixer.music.set_endevent(MUSIC_END)
 
+# tkinter window menu
+# file -> save: save playing sequence
+# help -> info: user guide shortcuts
 menubar = Menu(root)
 root.config(menu=menubar)
 
@@ -865,6 +907,7 @@ help = Menu(menubar)
 menubar.add_cascade(label='Help', menu=help)
 help.add_command(label='Info', command=user_guide)
 
+# Control Butttons should be above DDList frame
 fra = Frame(root)
 
 playBTN = Button(fra, image=img_play_btn, command=play_music)
@@ -890,17 +933,21 @@ for i, d in enumerate(m.get_sample):
     label.config(font=("Arial", 14))
     label.config(bg='#F0F0ED')
     label.pack(anchor=W, padx= (4,0), pady= (4,0))
-
+    # create tooltop to show text as hovering
     CreateToolTip(label, text=d)
-
     sortable_list.add_item(item)
+    # make a copy of collected label tags and label names
     m.push_label_tags(label)
     m.push_label_nams(d)
 
+# control+s should be binded separated
+# be aware that as press ctrl+s, ctrl press is triggered, since we can't have both 
 root.bind_all("<KeyPress>", handle)
 root.bind('<Control-s>', save_files)
 
+# check if there is any music playing
 check_event()
 
 root.mainloop()
+# close pygame if tkinter is terminated
 pygame.quit()
