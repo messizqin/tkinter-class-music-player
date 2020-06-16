@@ -58,6 +58,45 @@ class Module:
         # volume
         self.val = 70
 
+    # if json exist and music has been added or deleted
+    def comparison(self):
+        cd = c.data
+        if len(cd) == 0:
+            return
+        indir, inind = Module.get_init_files()
+        for indices, f in enumerate(r.sample):
+            if f not in indir:
+                # f is deleted
+                this_ind = r.sample.index(f)
+                self.remove_one(f, this_ind)
+
+        for indices, f in enumerate(indir):
+            if f not in r.sample:
+                # f is added
+                this_ind = indir.index(f)
+                self.add_one(f, this_ind)
+
+    def add_one(self, f, this_ind):
+        rei = [i for i in self.inds]
+        r.sample.insert(0, f)
+        self.inds = [this_ind]
+        for i in rei:
+            if i < this_ind:
+                self.inds.append(i)
+            else:
+                self.inds.append(i + 1)
+
+    def remove_one(self, f, this_ind):
+        rei = [i for i in self.inds]
+        r.sample.remove(f)
+        self.inds = []
+        rei.remove(this_ind)
+        for i in rei:
+            if i > this_ind:
+                self.inds.append(i - 1)
+            else:
+                self.inds.append(i)
+
     def switch_false(self):
         self.switched = False
 
@@ -96,9 +135,14 @@ class Module:
     def start_true(self):
         self.started = True
 
+    @staticmethod
+    def get_init_files():
+        files = [f for f in os.listdir('.') if os.path.isfile(f) and os.path.splitext(f)[1].split('.')[1] in ['mp3', 'flac', 'wav', 'aif', 'aiff']]
+        finds = [i for i in range(len(files))]
+        return files, finds
+
     def init_files(self):
-        self.files = [f for f in os.listdir('.') if os.path.isfile(f) and os.path.splitext(f)[1].split('.')[1] in ['mp3', 'flac', 'wav', 'aif', 'aiff']]
-        self.finds = [i for i in range(len(self.files))]
+        self.files, self.finds = Module.get_init_files()
 
     @property
     def is_switched(self):
@@ -397,7 +441,13 @@ class Music:
                 self.sample = []
                 m.assign_inds(inds)
                 for i in inds:
-                    self.sample.append(self.total[i])
+                    # except deletion
+                    try:
+                        self.sample.append(self.total[i])
+                    except IndexError:
+                        pass
+                # handle potential file changes
+                m.comparison()
             else:
                 # 2. json exist and it's the first time the user drag and drop
                 if m.get_confessor:
