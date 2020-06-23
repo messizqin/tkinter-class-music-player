@@ -1,5 +1,9 @@
 <h1>Tkinter class music player</h1>
 <hr />
+
+![exp](https://github.com/Weilory/tkinter-class-music-player/blob/master/docs/gif/exp.gif)
+
+<br />
 Based on python 3.7 tkinter 8.5
 <br />
 This Music player make it easier if you want to listen to music in class and hide it from your grumpy teacher.  
