@@ -33,5 +33,8 @@ This Music player make it easier if you want to listen to music in class and hid
   <li>Start/Pause songs</li>
   <li>Control volume</li>
   <li>Previous/Next songs</li>
+  <li>Single circle</li>
+  <li>Shuffle</li>
+  <li>Save playing sequence</li>
 </ol>
 <br /><br />
