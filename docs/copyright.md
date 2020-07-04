@@ -59,3 +59,5 @@ Many shortcuts allow user to:
 <h2>HISTORY</h2>
 1.0 - 04/06/2020
 main functions: save playing sequence, shortcuts (start/pause/previous/next/set_volume/save_files)<br /><br />
+2.0 - 04/07/2020
+added functions: single cycle, shuffle<br /><br />
