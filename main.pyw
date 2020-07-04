@@ -17,6 +17,8 @@ try:
 except NameError:
     basestring = str
 
+from random import shuffle
+
 # pass in two array of same elements in different order, return how second one can be gained from first
 def change(initial, after):
     pc = []
@@ -57,6 +59,8 @@ class Module:
         self.dummy = []
         # volume
         self.val = 70
+        # continue to play one song
+        self.locked = False
 
     # if json exist and music has been added or deleted
     def comparison(self):
@@ -220,6 +224,9 @@ class Module:
     def indicator_false(self):
         self.indicator = False
 
+    def indicator_true(self):
+        self.indicator = True
+
     @property
     def get_indicator(self):
         return self.indicator
@@ -230,6 +237,9 @@ class Module:
 
     def confessor_false(self):
         self.confessor = False
+
+    def confessor_true(self):
+        self.confessor = True
 
     # label position from left top conner can be gained from winfo.rootx() and winfo.rooty()
     @property
@@ -296,6 +306,20 @@ class Module:
     def get_val(self):
         return self.val
 
+    def lock_true(self):
+        self.locked = True
+
+    def lock_false(self):
+        self.locked = False
+
+    @property
+    def get_lock(self):
+        return self.locked
+
+    def destroy_labels(self):
+        self.label_tags = []
+        self.label_nams = []
+
 # generate a cache.json in hide mode to record playing sequence
 class Cache:
     def __init__(self):
@@ -316,6 +340,7 @@ class Cache:
             file.close()
         except IOError:
             file = open(self.cache, 'w')
+            self.write({'seq': [x for x in range(r.length)]})
             os.system(f"attrib +h {self.cache}")
             file.close()
 
@@ -345,6 +370,11 @@ class Cache:
         for key, value in kwargs.items():
             dt[key] = value
         self.write(dt)
+
+    def mess(self):
+        arr = [x for x in range(r.length)]
+        shuffle(arr)
+        self.write({"seq": arr})
 
     def write(self, data):
         os.system(f"attrib -h {self.cache}")
@@ -425,6 +455,10 @@ class Music:
         self.route = Route(total)
 
     @property
+    def length(self):
+        return len(self.total)
+
+    @property
     def reverse(self):
         brr = []
         for i in self.total:
@@ -481,6 +515,9 @@ class Music:
         m.auto_labeling()
         return f
 
+    def _this(self):
+        return self.sample[self.route.index]
+
     def _next(self, init=False):
         if init:
             self.route.assign(0)
@@ -535,6 +572,12 @@ def label_to_dummy():
         lb.config(text=dummy[i])
         lb.text = dummy[i]
 
+def fix():
+    if m.get_lock:
+        switchBTN.config(image=img_fix)
+    else:
+        switchBTN.config(image=img_switch)
+
 # switch imgs
 def switch():
     if m.is_switched:
@@ -560,13 +603,23 @@ def switch():
         nextBTN.config(image=img_next_fkr)
         nextBTN.image = img_next_fkr
 
+def lock():
+    if m.get_lock:
+        m.lock_false()
+    else:
+        m.lock_true()
+    fix()
+
 # support auto-play 
 def check_event():
     for event in pygame.event.get():
         if event.type == MUSIC_END:
-            next_music()
+            if m.get_lock:
+                this_music()
+            else:
+                next_music()
 
-    root.after(100, check_event)
+    root.after(1000, check_event)
 
 # trigger by whitespace press and playBTN
 def play_music():
@@ -584,6 +637,14 @@ def play_music():
 # trigger by whitespace press and stopBTN
 def stop_music():
     pygame.mixer.music.pause()
+
+# trigger by l press or lock button
+def this_music():
+    if m.get_lock:
+        pygame.mixer.music.load(r._this())
+        pygame.mixer.music.play()
+    if m.is_paused:
+        stop_music()
 
 # trigger by right-arrow press or nextBTN
 def next_music():
@@ -874,6 +935,43 @@ class DDList(Frame):
         self.puts(r)
         m.resort_true()
 
+class Tags:
+    def __init__(self):
+        self.sortable_list = DDList(root, 200, 35, offset_x=10, offset_y=10, gap =10, item_borderwidth=5, item_relief="groove")
+        self.sortable_list.pack(expand=True, fill=BOTH)
+
+    def reinit(self):
+        self.sortable_list = DDList(root, 200, 35, offset_x=10, offset_y=10, gap =10, item_borderwidth=5, item_relief="groove")
+        self.sortable_list.pack(expand=True, fill=BOTH)
+
+    def trash(self):
+        self.sortable_list.destroy()
+
+    def tags_assign(self):
+        for i, d in enumerate(m.get_sample):
+            item = self.sortable_list.create_item(value=i)
+            label = Label(item, text=d, cursor='fleur')
+            label.config(font=("Arial", 14))
+            label.config(bg='#F0F0ED')
+            label.pack(anchor=W, padx= (4,0), pady= (4,0))
+            # create tooltop to show text as hovering
+            CreateToolTip(label, text=d)
+            self.sortable_list.add_item(item)
+            # make a copy of collected label tags and label names
+            m.push_label_tags(label)
+            m.push_label_nams(d)
+
+    def tags_reassign(self):
+        m.resort_true()
+        c.mess()
+        m.indicator_true()
+        m.confessor_true()
+        r.assi([int(i) for i in c.data['seq']])
+        m.destroy_labels()
+        self.trash()
+        self.reinit()
+        self.tags_assign()
+
 def set_volume(val):
     pygame.mixer.music.set_volume(int(val)/100.0)
 
@@ -891,6 +989,10 @@ def handle(event):
             play_music()
     elif event.keysym == 'm':
         switch()
+    elif event.keysym == 'l':
+        lock()
+    elif event.keysym == 's':
+        t.tags_reassign()
     elif event.keysym == "Right":
         next_music()
     elif event.keysym == "Left":
@@ -921,6 +1023,7 @@ img_stop_fkr = PhotoImage(file='img\\mail.png').subsample(14)
 img_prev_fkr = PhotoImage(file='img\\file.png').subsample(14)
 img_next_fkr = PhotoImage(file='img\\pen.png').subsample(14)
 
+img_fix = PhotoImage(file='img\\infinite.png').subsample(14)
 img_switch = PhotoImage(file='img\\arrow.png').subsample(14)
 
 # init Module by directory default files
@@ -969,26 +1072,13 @@ prevBTN.grid(row=0, column=4)
 nextBTN = Button(fra, image=img_next_btn, command=next_music)
 nextBTN.grid(row=0, column=5)
 
-switchBTN = Button(fra, image=img_switch, command=switch)
+switchBTN = Button(fra, image=img_switch, command=lock)
 switchBTN.grid(row=0, column=6)
 
 fra.pack(fill=X, pady=(0, 10))
 
-sortable_list = DDList(root, 200, 35, offset_x=10, offset_y=10, gap =10, item_borderwidth=5, item_relief="groove")
-sortable_list.pack(expand=True, fill=BOTH)
-
-for i, d in enumerate(m.get_sample):
-    item = sortable_list.create_item(value=i)
-    label = Label(item, text=d, cursor='fleur')
-    label.config(font=("Arial", 14))
-    label.config(bg='#F0F0ED')
-    label.pack(anchor=W, padx= (4,0), pady= (4,0))
-    # create tooltop to show text as hovering
-    CreateToolTip(label, text=d)
-    sortable_list.add_item(item)
-    # make a copy of collected label tags and label names
-    m.push_label_tags(label)
-    m.push_label_nams(d)
+t = Tags()
+t.tags_assign()
 
 # control+s should be binded separated
 # be aware that as press ctrl+s, ctrl press is triggered, since we can't have both 
