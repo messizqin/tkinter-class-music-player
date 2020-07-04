@@ -672,7 +672,7 @@ def prev_music():
 
 # trigger by i press or help->info
 def user_guide():
-    messagebox.showinfo('Shortcuts', "`whitespace`: play\\pause\n`left-arrow`: play previous song\n`right-arrow`: play next song\n`up-arrow`: increase volumne\n`down-arrow`: decrease volume\n`m`: switch to dummy study tool tags\n`ctrl+s`: save current playing sequence\n`i`: shortcuts")
+    messagebox.showinfo('Shortcuts', "`whitespace`: play\\pause\n`left-arrow`: play previous song\n`right-arrow`: play next song\n`up-arrow`: increase volumne\n`down-arrow`: decrease volume\n`s`: shuffle\n`m`: switch to dummy study tool tags\n`ctrl+s`: save current playing sequence\n`i`: show shortcuts information")
 
 # trigger by ctrl+s or file->save
 def save_files(e):
